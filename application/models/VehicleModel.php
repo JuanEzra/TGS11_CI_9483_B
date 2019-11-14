@@ -1,37 +1,39 @@
 <?php
 defined('BASEPATH')OR exit('No direct script access allowed');
 
-class UserModel extends CI_Model
+class VehicleModel extends CI_Model
 {
-    private$table='users';
+    private$table='vehicles';
     
     public$id;
-    public$name;
-    public$email;
-    public$password;
+    public$merk;
+    public$type;
+    public$licensePlate;
+    public$created_at;
     public$rule=[
         [
-            'field'=>'name',
-            'label'=>'name',
+            'field'=>'licensePlate',
+            'label'=>'licensePlate',
             'rules'=>'required'
         ],
     ];
     public function Rules(){return$this->rule;}
     
     public function getAll(){return
-        $this->db->get('users')->result();
+        $this->db->get('vehicles')->result();
     }
     public function store($request){
-        $this->name=$request->name;
-        $this->email=$request->email;
-        $this->password=password_hash($request->password,PASSWORD_BCRYPT);
+        $this->merk=$request->merk;
+        $this->type=$request->type;
+        $this->licensePlate=$request->licensePlate;
+        $this->created_at=$request->created_at;
         if($this->db->insert($this->table,$this)){
             return['msg'=>'Berhasil','error'=>false];
         }
         return['msg'=>'Gagal','error'=>true];
         }
         public function update($request,$id){
-            $updateData=['email'=>$request->email,'name'=>$request->name];
+            $updateData=['merk'=>$request->merk,'type'=>$request->type, 'licensePlate'=>$request->licensePlate, 'created_at'=>$request->created_at,];
             if($this->db->where('id',$id)->update($this->table,$updateData)){
                 return['msg'=>'Berhasil','error'=>false];
                 }

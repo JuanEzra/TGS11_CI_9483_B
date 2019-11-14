@@ -1,54 +1,54 @@
 <?php
 use Restserver \Libraries\REST_Controller;
-Class User extends REST_Controller{
+Class Vehicle extends REST_Controller{
 
     public function __construct(){
         header('Access-Control-Allow-Origin:*');
         header("Access-Control-Allow-Methods:GET,OPTIONS,POST,DELETE");
         header("Access-Control-Allow-Headers:Content-Type,Content-Length,Accept-Encoding");
         parent::__construct();
-        $this->load->model('UserModel');
+        $this->load->model('VehicleModel');
         $this->load->library('form_validation');
     }
     public function index_get(){
-        return$this->returnData($this->db->get('users')->result(),false);
+        return$this->returnData($this->db->get('vehicles')->result(),false);
     }
     public function index_post($id=null){
         $validation=$this->form_validation;
-        $rule=$this->UserModel->rules();
+        $rule=$this->VehicleModel->rules();
         if($id==null){
             array_push($rule,[
-                'field'=>'password',
-                'label'=>'password',
+                'field'=>'licensePlate',
+                'label'=>'licensePlate',
                 'rules'=>'required'
-            ],
-            [
-                'field'=>'email',
-                'label'=>'email',
-                'rules'=>'required|valid_email|is_unique[users.email]'
-                ]);
+            ]
+            
+        
+        
+        );
             }
             else{
                 array_push($rule,
                 [
                     'field'=>'email',
                     'label'=>'email',
-                    'rules'=>'required|valid_email'
+                    'rules'=>'required|valid_licensePlate'
                     ]);
                 }
                 $validation->set_rules($rule);
                 if(!$validation->run()){
                     return$this->returnData($this->form_validation->error_array(),true);
                 }
-                $user=new UserData();
-                $user->name=$this->post('name');
-                $user->password=$this->post('password');
-                $user->email=$this->post('email');
+                $vehicle=new VehicleData();
+                $vehicle->merk=$this->post('merk');
+                $vehicle->type=$this->post('type');
+                $vehicle->licensePlate=$this->post('licensePlate');
+                $vehicle->created_at=$this->post('created_at');
                 if($id==null){
-                    $response=$this->UserModel->store($user);
+                    $response=$this->VehicleModel->store($vehicle);
 
                 }else{
-                    $response=$this->UserModel->update($user,$id);
+                    $response=$this->VehicleModel->update($vehicle,$id);
                 }
                 return$this->returnData($response['msg'],$response['error']);
             }
@@ -56,7 +56,7 @@ Class User extends REST_Controller{
                 if($id==null){
                     return $this->returnData('Parameter Id Tidak Ditemukan',true);
                 }
-                $response=$this->UserModel->destroy($id);
+                $response=$this->VehicleModel->destroy($id);
                 return
                 $this->returnData($response['msg'],$response['error']);
             }
@@ -66,8 +66,9 @@ Class User extends REST_Controller{
                 return$this->response($response);
             }
         }
-        Class UserData{
-            public$name;
-            public$password;
-            public$email;
+        Class VehicleData{
+            public$merk;
+            public$type;
+            public$licensePlate;
+            public$created_at;
 }
