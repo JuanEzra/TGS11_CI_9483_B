@@ -1,7 +1,6 @@
 <?php
 use Restserver \Libraries\REST_Controller;
 Class Vehicle extends REST_Controller{
-
     public function __construct(){
         header('Access-Control-Allow-Origin:*');
         header("Access-Control-Allow-Methods:GET,OPTIONS,POST,DELETE");
@@ -20,19 +19,15 @@ Class Vehicle extends REST_Controller{
             array_push($rule,[
                 'field'=>'licensePlate',
                 'label'=>'licensePlate',
-                'rules'=>'required'
-            ]
-            
-        
-        
-        );
+                'rules'=>'required|is_unique[vehicles.licensePlate]'
+                ]);
             }
             else{
                 array_push($rule,
                 [
-                    'field'=>'email',
-                    'label'=>'email',
-                    'rules'=>'required|valid_licensePlate'
+                    'field'=>'licensePlate',
+                    'label'=>'licensePlate',
+                    'rules'=>'required'
                     ]);
                 }
                 $validation->set_rules($rule);
@@ -46,7 +41,6 @@ Class Vehicle extends REST_Controller{
                 $vehicle->created_at=$this->post('created_at');
                 if($id==null){
                     $response=$this->VehicleModel->store($vehicle);
-
                 }else{
                     $response=$this->VehicleModel->update($vehicle,$id);
                 }
